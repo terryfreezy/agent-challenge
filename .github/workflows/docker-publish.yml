@@ -1,0 +1,58 @@
+name: Build & Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+      - elizaos-challenge
+  workflow_dispatch:   # Allow manual trigger from GitHub UI
+
+jobs:
+  build-and-push:
+    name: Build & Push to Docker Hub
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout code ───────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Set up Docker Buildx (multi-platform builds) ────
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # ── 3. Log in to Docker Hub ────────────────────────────
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # ── 4. Extract metadata (tags + labels) ────────────────
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: terryfreezy/nosana-eliza-agent
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix=sha-,format=short
+
+      # ── 5. Build & push ────────────────────────────────────
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
+
+      # ── 6. Print image digest ──────────────────────────────
+      - name: Image digest
+        run: |
+          echo "✅ Image pushed successfully!"
+          echo "  Image: terryfreezy/nosana-eliza-agent:latest"
+          echo "  Digest: ${{ steps.build-and-push.outputs.digest }}"

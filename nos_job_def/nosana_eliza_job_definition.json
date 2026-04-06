@@ -1,23 +1,41 @@
 {
+  "version": "0.1",
+  "type": "container",
+  "meta": {
+    "trigger": "cli",
+    "description": "AlphaFinder — Personal Research AI Agent powered by ElizaOS on Nosana"
+  },
   "ops": [
     {
-      "id": "agent",
+      "id": "alphafinder-agent",
+      "type": "container/run",
       "args": {
-        "image": "yourusername/nosana-eliza-agent:latest",
+        "image": "terryfreezy/nosana-eliza-agent:latest",
         "expose": 3000,
+        "gpu": true,
         "env": {
           "OPENAI_API_KEY": "nosana",
-          "OPENAI_API_URL": "TODO: replace with actual Nosana Qwen3.5 endpoint URL",
-          "MODEL_NAME": "qwen3.5-27b",
+          "OPENAI_API_URL": "https://6vq2bcqphcansrs9b88ztxfs88oqy7etah2ugudytv2x.node.k8s.prd.nos.ci/v1",
+          "MODEL_NAME": "Qwen3.5-27B-AWQ-4bit",
+          "OPENAI_EMBEDDING_URL": "https://4yiccatpyxx773jtewo5ccwhw1s2hezq5pehndb6fcfq.node.k8s.prd.nos.ci/v1",
+          "OPENAI_EMBEDDING_API_KEY": "nosana",
+          "OPENAI_EMBEDDING_MODEL": "Qwen3-Embedding-0.6B",
+          "OPENAI_EMBEDDING_DIMENSIONS": "1024",
           "SERVER_PORT": "3000",
-          "NODE_ENV": "production"
-        }
+          "NODE_ENV": "production",
+          "ELIZAOS_TELEMETRY_DISABLED": "true",
+          "DO_NOT_TRACK": "1"
+        },
+        "volumes": [
+          {
+            "name": "alphafinder-data",
+            "mountPath": "/app/data"
+          }
+        ]
       },
       "execution": {
         "group": "run"
-      },
-      "type": "container/run"
+      }
     }
-  ],
-  "version": "0.1"
+  ]
 }
