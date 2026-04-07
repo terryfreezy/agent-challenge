@@ -13,14 +13,11 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Install pnpm
-RUN npm install -g pnpm
-
 # Copy manifests first (better layer caching)
 COPY package.json .npmrc ./
 
-# Install production deps only
-RUN pnpm install --prod
+# Install production deps only (npm will read .npmrc for legacy-peer-deps)
+RUN npm install --omit=dev
 
 # Copy source
 COPY . .
@@ -42,9 +39,6 @@ ENV SERVER_PORT=3000
 
 WORKDIR /app
 
-# Install pnpm in runtime image too (needed to run elizaos CLI)
-RUN npm install -g pnpm
-
 # Copy from builder
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json .npmrc ./
@@ -63,4 +57,4 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
   CMD node -e "fetch('http://localhost:3000/api/agents').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 
-CMD ["pnpm", "start"]
+CMD ["npm", "start"]
