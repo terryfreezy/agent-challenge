@@ -11,7 +11,9 @@
       "type": "container/run",
       "args": {
         "image": "terryfreezy/nosana-eliza-agent:latest",
-        "expose": 3000,
+        "ports": [
+          "3000:3000"
+        ],
         "gpu": true,
         "env": {
           "OPENAI_API_KEY": "nosana",
@@ -25,13 +27,7 @@
           "NODE_ENV": "production",
           "ELIZAOS_TELEMETRY_DISABLED": "true",
           "DO_NOT_TRACK": "1"
-        },
-        "volumes": [
-          {
-            "name": "alphafinder-data",
-            "mountPath": "/app/data"
-          }
-        ]
+        }
       },
       "execution": {
         "group": "run"
