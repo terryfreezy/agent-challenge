@@ -20,7 +20,7 @@ RUN npm install -g pnpm
 COPY package.json .npmrc ./
 
 # Install production deps only
-RUN pnpm install --frozen-lockfile --prod
+RUN pnpm install --prod
 
 # Copy source
 COPY . .
