@@ -14,7 +14,10 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copy manifests first (better layer caching)
-COPY package.json .npmrc ./
+COPY package.json ./
+
+# Create .npmrc exactly as needed to bypass peer dependency errors
+RUN echo "legacy-peer-deps=true" > .npmrc
 
 # Install production deps only (npm will read .npmrc for legacy-peer-deps)
 RUN npm install --omit=dev
@@ -41,7 +44,7 @@ WORKDIR /app
 
 # Copy from builder
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json .npmrc ./
+COPY --from=builder /app/package.json ./
 COPY --from=builder /app/characters ./characters
 COPY --from=builder /app/src ./src
 COPY --from=builder /app/frontend ./frontend
