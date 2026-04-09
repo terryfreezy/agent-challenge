@@ -13,10 +13,10 @@
     "@elizaos/core": "^1.7.2",
     "@elizaos/plugin-bootstrap": "^1.7.2",
     "@elizaos/plugin-openai": "^1.6.0",
-    "@elizaos/plugin-web-search": "^1.0.1"
-  },
-  "devDependencies": {
+    "@elizaos/plugin-web-search": "^1.0.1",
     "@elizaos/cli": "^1.7.2",
     "typescript": "^5.0.0"
+  },
+  "devDependencies": {
   }
 }
