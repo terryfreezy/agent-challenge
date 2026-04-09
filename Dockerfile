@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # ── Stage 1: Builder ──────────────────────────────────────
-FROM node:23-slim AS builder
+FROM node:22-slim AS builder
 
 # System deps for native modules (better-sqlite3, canvas, etc.)
 RUN apt-get update && apt-get install -y \
@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copy manifests first (better layer caching)
-COPY package.json ./
+COPY package.json package-lock.json ./
 
 # Create .npmrc exactly as needed to bypass peer dependency errors
 RUN echo "legacy-peer-deps=true" > .npmrc
@@ -26,12 +26,13 @@ RUN npm install --omit=dev
 COPY . .
 
 # ── Stage 2: Runtime ──────────────────────────────────────
-FROM node:23-slim AS runtime
+FROM node:22-slim AS runtime
 
 RUN apt-get update && apt-get install -y \
   python3 \
   make \
   g++ \
+  git \
   && rm -rf /var/lib/apt/lists/*
 
 # Disable telemetry
