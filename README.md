@@ -18,15 +18,6 @@ Inspired by [OpenClaw](https://openclaw.ai/) — the self-hosted personal AI mov
 
 ---
 
-## Prizes — $3,000 USDC Total
-
-| Place | Prize |
-|-------|-------|
-| 🥇 1st | $1,000 USDC |
-| 🥈 2nd | $750 USDC |
-| 🥉 3rd | $450 USDC |
-| 4th | $200 USDC |
-| 5th–10th | $100 USDC each |
 
 ---
 

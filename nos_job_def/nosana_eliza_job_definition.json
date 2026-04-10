@@ -2,19 +2,20 @@
   "version": "0.1",
   "type": "container",
   "meta": {
-    "trigger": "cli",
-    "description": "AlphaFinder — Personal Research AI Agent powered by ElizaOS on Nosana"
+    "trigger": "cli"
   },
   "ops": [
     {
-      "id": "alphafinder-agent",
+      "id": "eliza-agent",
       "type": "container/run",
       "args": {
         "image": "terryfreezy/nosana-eliza-agent:latest",
-        "ports": [
-          "3000:3000"
+        "expose": 3000,
+        "cmd": [
+          "sh",
+          "-c",
+          "npm install --legacy-peer-deps @elizaos/cli typescript && npm start"
         ],
-        "gpu": true,
         "env": {
           "OPENAI_API_KEY": "nosana",
           "OPENAI_API_URL": "https://6vq2bcqphcansrs9b88ztxfs88oqy7etah2ugudytv2x.node.k8s.prd.nos.ci/v1",
@@ -28,9 +29,6 @@
           "ELIZAOS_TELEMETRY_DISABLED": "true",
           "DO_NOT_TRACK": "1"
         }
-      },
-      "execution": {
-        "group": "run"
       }
     }
   ]
